@@ -16,18 +16,23 @@ module Cmr
       url = '/legacy-services/rest/option_definitions'
       content_type = { 'Content-Type' => 'application/json' }
       body = { 'option_definition' => order_option }
-      echo_security_token = { 'Echo-Token' => echo_provider_token }
-      post(url, body.to_json, content_type.merge(echo_security_token))
+      echo_security_token = "Bearer #{echo_provider_token}"
+      headers = { 'Authorization' => echo_security_token }
+      post(url, body.to_json, content_type.merge(headers))
     end
 
     def get_order_option(id, echo_provider_token)
       url = "/legacy-services/rest/option_definitions/#{id}"
-      get(url, {}, { 'Echo-Token' => echo_provider_token })
+      echo_security_token = "Bearer #{echo_provider_token}"
+      headers = { 'Authorization' => echo_security_token }
+      get(url, {}, headers)
     end
 
     def delete_order_option(id, echo_provider_token)
       url = "/legacy-services/rest/option_definitions/#{id}"
-      delete(url, nil, nil, { 'Echo-Token' => echo_provider_token })
+      echo_security_token = "Bearer #{echo_provider_token}"
+      headers = { 'Authorization' => echo_security_token }
+      delete(url, nil, nil, headers)
     end
 
     def get_order_option_assignments(options, echo_provider_token)
