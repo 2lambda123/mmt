@@ -81,15 +81,16 @@ module Cmr
       name = group['name'] || ''
       description = group['description'] || ''
       provider_id = group['provider_id'] || ''
+      members = group['members'] || []
       response = post(
         '/api/user_groups',
-        "name=#{name}&description=#{URI.encode(description)}&tag=#{provider_id}",
+        "name=#{name}&description=#{URI.encode(description)}&tag=#{provider_id}&members=#{URI.encode(members)}",
         'Authorization' => "Bearer #{get_client_token}"
       )
-      if response.success?
-        group_id = response.body['group_id']
-        add_new_members(group_id, group['members']) if group['members']
-      end
+      # if response.success?
+      #   group_id = response.body['group_id']
+      #   add_new_members(group_id, group['members']) if group['members']
+      # end
       response.body['provider_id'] = response.body['tag'] if response.body['provider_id'].nil?
       response
     end
@@ -213,23 +214,24 @@ module Cmr
     # TODO: This entire method should be transactional with rollback.s
     def update_edl_group(group_id, group)
       new_description = group['description'] || ''
+      members = group['members'] || []
 
-      group_members_response = get_edl_group_members(group_id)
-      existing_members = group_members_response.body if group_members_response.success?
-      if existing_members.nil?
-        existing_members = []
-      end
-      new_members = group['members'] || []
+      # group_members_response = get_edl_group_members(group_id)
+      # existing_members = group_members_response.body if group_members_response.success?
+      # if existing_members.nil?
+      #   existing_members = []
+      # end
+      # new_members = group['members'] || []
 
-      members_to_add = new_members.reject { |x| existing_members.include? x }
-      add_new_members(group_id, members_to_add)
-
-      members_to_remove = existing_members.reject { |x| new_members.include? x }
-      remove_old_members(group_id, members_to_remove)
+      # members_to_add = new_members.reject { |x| existing_members.include? x }
+      # add_new_members(group_id, members_to_add)
+      #
+      # members_to_remove = existing_members.reject { |x| new_members.include? x }
+      # remove_old_members(group_id, members_to_remove)
 
       response = post(
         "/api/user_groups/#{group_id}/update",
-        "&description=#{URI.encode(new_description)}",
+        "&description=#{URI.encode(new_description)}&members=#{URI.encode(members)}",
         'Authorization' => "Bearer #{get_client_token}"
       )
 
