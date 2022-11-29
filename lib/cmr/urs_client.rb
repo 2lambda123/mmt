@@ -84,7 +84,7 @@ module Cmr
       members = group['members'] || []
       response = post(
         '/api/user_groups',
-        "name=#{name}&description=#{URI.encode(description)}&tag=#{provider_id}&members=#{URI.encode(members)}",
+        "name=#{name}&description=#{URI.encode(description)}&tag=#{provider_id}&members=#{members}",
         'Authorization' => "Bearer #{get_client_token}"
       )
       # if response.success?
@@ -231,7 +231,7 @@ module Cmr
 
       response = post(
         "/api/user_groups/#{group_id}/update",
-        "&description=#{URI.encode(new_description)}&members=#{URI.encode(members)}",
+        "&description=#{URI.encode(new_description)}&members=#{members}",
         'Authorization' => "Bearer #{get_client_token}"
       )
 
