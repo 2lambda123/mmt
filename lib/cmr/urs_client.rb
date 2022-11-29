@@ -82,9 +82,11 @@ module Cmr
       description = group['description'] || ''
       provider_id = group['provider_id'] || ''
       members = group['members'] || []
+      members_query_str = ''
+      members.each { |user_id| members_query_str << "&members[]=#{user_id}"  }
       response = post(
         '/api/user_groups',
-        "name=#{name}&description=#{URI.encode(description)}&tag=#{provider_id}&members=#{members}",
+        "name=#{name}&description=#{URI.encode(description)}&tag=#{provider_id}#{members_query_str}",
         'Authorization' => "Bearer #{get_client_token}"
       )
       # if response.success?
@@ -215,7 +217,8 @@ module Cmr
     def update_edl_group(group_id, group)
       new_description = group['description'] || ''
       members = group['members'] || []
-
+      members_query_str = ''
+      members.each { |user_id| members_query_str << "&members[]=#{user_id}"  }
       # group_members_response = get_edl_group_members(group_id)
       # existing_members = group_members_response.body if group_members_response.success?
       # if existing_members.nil?
@@ -231,7 +234,7 @@ module Cmr
 
       response = post(
         "/api/user_groups/#{group_id}/update",
-        "&description=#{URI.encode(new_description)}&members=#{members}",
+        "&description=#{URI.encode(new_description)}#{members_query_str}",
         'Authorization' => "Bearer #{get_client_token}"
       )
 
