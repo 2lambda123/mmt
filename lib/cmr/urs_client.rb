@@ -89,10 +89,6 @@ module Cmr
         "name=#{name}&description=#{URI.encode(description)}&tag=#{provider_id}#{members_query_str}",
         'Authorization' => "Bearer #{get_client_token}"
       )
-      # if response.success?
-      #   group_id = response.body['group_id']
-      #   add_new_members(group_id, group['members']) if group['members']
-      # end
       response.body['provider_id'] = response.body['tag'] if response.body['provider_id'].nil?
       response
     end
@@ -219,26 +215,11 @@ module Cmr
       members = group['members'] || []
       members_query_str = ''
       members.each { |user_id| members_query_str << "&members[]=#{user_id}"  }
-      # group_members_response = get_edl_group_members(group_id)
-      # existing_members = group_members_response.body if group_members_response.success?
-      # if existing_members.nil?
-      #   existing_members = []
-      # end
-      # new_members = group['members'] || []
-
-      # members_to_add = new_members.reject { |x| existing_members.include? x }
-      # add_new_members(group_id, members_to_add)
-      #
-      # members_to_remove = existing_members.reject { |x| new_members.include? x }
-      # remove_old_members(group_id, members_to_remove)
-
       response = post(
         "/api/user_groups/#{group_id}/update",
         "&description=#{URI.encode(new_description)}#{members_query_str}",
         'Authorization' => "Bearer #{get_client_token}"
       )
-
-
       response.body['provider_id'] = response.body['tag'] if response.body['provider_id'].nil?
       response.body['group_id'] = group_id
       response
