@@ -222,6 +222,7 @@ class CollectionDraftsController < BaseDraftsController
   end
 
   def download_json
+    Rails.logger.info("Download JSON for #{params[:id]}")
     if Rails.env.development?
       render json: JSON.pretty_generate(get_resource.draft) if Rails.env.development?
       return
@@ -230,6 +231,7 @@ class CollectionDraftsController < BaseDraftsController
     authorization_header = request.headers['Authorization']
 
     if authorization_header.nil?
+      Rails.logger.info("Download JSON for #{params[:id]} - No authorization header")
       render json: JSON.pretty_generate({'error': 'unauthorized'}), status: 401
       return
     end
@@ -237,6 +239,7 @@ class CollectionDraftsController < BaseDraftsController
 
     # Handle EDL authentication
     if authorization_header.start_with?('Bearer')
+      Rails.logger.info("Download JSON for #{params[:id]} - Has bearer")
       if Rails.configuration.proposal_mode
         token_response = cmr_client.validate_dmmt_token(token)
       else
@@ -245,7 +248,9 @@ class CollectionDraftsController < BaseDraftsController
       token_info = token_response.body
       token_info = JSON.parse token_info if token_info.class == String # for some reason the mock isn't return hash but json string.
       urs_uid = token_info['uid']
+      Rails.logger.info("Download JSON for #{params[:id]} - Got urs_uid of #{urs_uid}")
     else
+      Rails.logger.info("Download JSON for #{params[:id]} - Launchpad token sent")
       render json: JSON.pretty_generate(get_resource.draft)
       return
       # Todo: We need to handle verifying a launchpad token.
@@ -264,6 +269,7 @@ class CollectionDraftsController < BaseDraftsController
 
     # If we don't have a urs_uid, exit out with unauthorized
     if urs_uid.nil?
+      Rails.logger.info("Download JSON for #{params[:id]} - No urs_uid returning 401")
       render json: JSON.pretty_generate({ "error": 'unauthorized' }), status: 401
       return
     end
@@ -279,23 +285,30 @@ class CollectionDraftsController < BaseDraftsController
           # For proposals, users only have access to proposals created by them.
           # Verify the user owns the draft
           if token_user.urs_uid == draft_user.urs_uid
+            Rails.logger.info("Download JSON for #{params[:id]} - has access - token user #{token_user.urs_uid} == #{draft_user.urs_uid}")
             authorized = true
           else
             if is_non_nasa_draft_approver?(user: token_user, token: token)
+              Rails.logger.info("Download JSON for #{params[:id]} - has access - is a non nasa draft approver")
               authorized = true
             end
           end
         else
           # For drafts, users have access to any drafts in their provider list
           # Verify the user has permissions for this provider
-          authorized = true if token_user.available_providers.include? get_resource.provider_id
+          if token_user.available_providers.include? get_resource.provider_id
+            authorized = true
+            Rails.logger.info("Download JSON for #{params[:id]} - has access - in their provider list")
+          end
         end
       end
     end
 
     if authorized
+      Rails.logger.info("Download JSON for #{params[:id]} - is authorized")
       render json: JSON.pretty_generate(get_resource.draft)
     else
+      Rails.logger.info("Download JSON for #{params[:id]} - is NOT authorized")
       render json: JSON.pretty_generate({"error": 'unauthorized'}), status: 401
     end
   end
