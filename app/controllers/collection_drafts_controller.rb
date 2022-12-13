@@ -228,8 +228,10 @@ class CollectionDraftsController < BaseDraftsController
       return
     end
 
+    request.headers.each do |key, value|
+      puts("header key=#{key} value=#{value}")
+    end
     authorization_header = request.headers['Authorization']
-
     if authorization_header.nil?
       Rails.logger.info("Download JSON for #{params[:id]} - No authorization header")
       render json: JSON.pretty_generate({'error': 'unauthorized'}), status: 401
