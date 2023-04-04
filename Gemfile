@@ -1,10 +1,10 @@
 source 'https://rubygems.org'
 
-ruby "2.7.2"
+ruby "3.0.0"
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 # We have not investigated the cost of moving to rails 6, but expect it to make
 # more breaking changes.  Rails 5 is still supported.
-gem 'rails', '~> 6.0'
+gem 'rails', '~> 6.1.7.3'
 # Rails currently limits all of the action*/active* gems
 # activesupport limits tzinfo
 
@@ -125,3 +125,5 @@ end
 gem "shakapacker", "= 6.5"
 
 gem "react-rails", "= 2.6"
+
+gem 'webrick', '~> 1.7'
