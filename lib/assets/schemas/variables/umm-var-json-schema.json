@@ -374,8 +374,25 @@
           "maxLength": 80
         },
         "Size": {
-          "description": "The size of the dimension of the variable represented in the data field. For example, '1200'.",
-          "type": "number"
+          "oneOf": [{
+            "type": "object",
+            "additionalProperties": false,
+            "description": "The size of the dimension of the variable represented in the data field. For example, '1200'.",
+            "properties": {
+              "DimensionSize": {
+                "description": "The size of the dimension of the variable represented in the data field. For example, '1200'.",
+                "title": "Enter the dimension size.",
+                "type": "number"
+              },
+              "DimensionVaries": {
+                "description": "A value to designate that the dimension size of a variable in each granule is not uniform, but that it varies across granules.",
+                "title": "Dimension size varies.",
+                "type": "string",
+                "enum": ["Varies"]
+              }
+            }
+          }],
+          "enum": ["size", "varies"]
         },
         "Type": {
           "description": "The type of the dimension of the variable represented in the data field. For example, if the dimension has a special meaning, i.e., a latitude, longitude, pressure, height (or depth) or time, then the type should be set to either 'LATITUDE_DIMENSION', 'LONGITUDE_DIMENSION', 'PRESSURE_DIMENSION', 'HEIGHT_DIMENSION', 'DEPTH_DIMENSION' or 'TIME_DIMENSION', otherwise it should be set to 'OTHER'.",
@@ -449,22 +466,22 @@
           "maxLength": 4000
         },
         "URLContentType": {
-            "description": "A keyword describing the distinct content type of the online resource to this resource. (e.g., 'DATACENTER URL', 'DATA CONTACT URL', 'Visualization URL'). The valid values are contained in the KMS System: https://gcmd.earthdata.nasa.gov/KeywordViewer/scheme/all/8759ab63-ac04-4136-bc25-0c00eece1096",
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 80
+          "description": "A keyword describing the distinct content type of the online resource to this resource. (e.g., 'DATACENTER URL', 'DATA CONTACT URL', 'Visualization URL'). The valid values are contained in the KMS System: https://gcmd.earthdata.nasa.gov/KeywordViewer/scheme/all/8759ab63-ac04-4136-bc25-0c00eece1096",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
         },
         "Type": {
-            "description": "A keyword describing the type of the online resource to this resource. This helps the GUI to know what to do with this resource. (e.g., 'COLORMAP', 'GET VISUALIZATION'). The valid values are contained in the KMS System and are dependent on the URLContentType: https://gcmd.earthdata.nasa.gov/KeywordViewer/scheme/all/8759ab63-ac04-4136-bc25-0c00eece1096",
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 80
+          "description": "A keyword describing the type of the online resource to this resource. This helps the GUI to know what to do with this resource. (e.g., 'COLORMAP', 'GET VISUALIZATION'). The valid values are contained in the KMS System and are dependent on the URLContentType: https://gcmd.earthdata.nasa.gov/KeywordViewer/scheme/all/8759ab63-ac04-4136-bc25-0c00eece1096",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
         },
         "Subtype": {
-            "description": "A keyword describing the subtype of the online resource to this resource. This further helps the GUI to know what to do with this resource. (e.g., 'MEDIA', 'BROWSE', 'OPENDAP', 'OPENSEARCH', 'GITC', etc. ). The valid values are contained in the KMS System and are dependent on the Type: https://gcmd.earthdata.nasa.gov/KeywordViewer/scheme/all/8759ab63-ac04-4136-bc25-0c00eece1096",
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 80
+          "description": "A keyword describing the subtype of the online resource to this resource. This further helps the GUI to know what to do with this resource. (e.g., 'MEDIA', 'BROWSE', 'OPENDAP', 'OPENSEARCH', 'GITC', etc. ). The valid values are contained in the KMS System and are dependent on the Type: https://gcmd.earthdata.nasa.gov/KeywordViewer/scheme/all/8759ab63-ac04-4136-bc25-0c00eece1096",
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 80
         },
         "URL": {
           "description": "The URL for the relevant web page (e.g., the URL of the responsible organization's home page, the URL of the colormap server, etc.).",
@@ -495,7 +512,7 @@
         "URL": {
           "description": "This element represents the URL where the schema lives. The schema can be downloaded.",
           "type": "string",
-          "enum": ["https://cdn.earthdata.nasa.gov/umm/variable/v1.8.1"]
+          "enum": ["https://cdn.earthdata.nasa.gov/umm/variable/v1.8.2"]
         },
         "Name": {
           "description": "This element represents the name of the schema.",
@@ -505,7 +522,7 @@
         "Version": {
           "description": "This element represents the version of the schema.",
           "type": "string",
-          "enum": ["1.8.1"]
+          "enum": ["1.8.2"]
         }
       },
       "required": ["URL", "Name", "Version"]

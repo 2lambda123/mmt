@@ -334,7 +334,16 @@
                     {
                       "type": "section",
                       "htmlClass": "grid-col-4",
-                      "items": [{"key": "/Size", "field": true}]
+                      "title": "test",
+                      "items": [{
+                        "key": "/Size",
+                        "field": true,
+                        "type": "UmmSelect",
+                        "items": [{
+                          "type": "section",
+                          "key": "DimensionSize"
+                        }]
+                      }]
                     }
                   ]
                 },
